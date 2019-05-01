@@ -26,11 +26,11 @@ class VectorBase:
 
     @classmethod
     def zero(cls):
-        return cls(*[0 for _ in cls.dimensions])
+        return cls(*([0]* len(cls.dimensions)))
 
     @classmethod
     def one(cls):
-        return cls(*[1 for _ in cls.dimensions])
+        return cls(*([1]* len(cls.dimensions)))
 
     def __neg__(self):
         return self.__class__(*[-getattr(self, d) for d in self.dimensions])
