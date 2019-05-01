@@ -2,6 +2,9 @@ from vector.base import VectorBase
 
 
 class Vector3(VectorBase):
+    x: float
+    y: float
+    z: float
     dimensions = ['x', 'y', 'z']
 
     @classmethod
