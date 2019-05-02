@@ -26,11 +26,11 @@ class VectorBase:
 
     @classmethod
     def zero(cls):
-        return cls(*([0]* len(cls.dimensions)))
+        return cls(*([0] * len(cls.dimensions)))
 
     @classmethod
     def one(cls):
-        return cls(*([1]* len(cls.dimensions)))
+        return cls(*([1] * len(cls.dimensions)))
 
     def __neg__(self):
         return self.__class__(*[-getattr(self, d) for d in self.dimensions])
@@ -49,7 +49,7 @@ class VectorBase:
         return self.__class__(*[getattr(self, d) * other for d in self.dimensions])
 
     def __rmul__(self, other):
-        return self*other
+        return self * other
 
     def __truediv__(self, other):
         return self.__class__(*[getattr(self, d) / other for d in self.dimensions])
@@ -135,6 +135,11 @@ class VectorBase:
     @staticmethod
     def smooth_step(v1, v2, amount):
         raise NotImplementedError
+
+    def angle(self, other):
+        dot = self.dot(self, other) / (self.length() * other.length())
+        dot = clamp_value(dot, -1, 1)
+        return float(math.acos(dot))
 
     def length_squared(self):
         return sum(getattr(self, d) ** 2 for d in self.dimensions)

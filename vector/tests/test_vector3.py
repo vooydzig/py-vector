@@ -204,3 +204,9 @@ def test_can_normalize_in_place():
     v = Vector3(1, 2, 3)
     v.normalized()
     assert v.length() == pytest.approx(1)
+
+def test_can_get_angle_between_two_vectors():
+    v1 = Vector3.unit_x()
+    v2 = Vector3.unit_y()
+    assert v1.angle(v1) == 0
+    assert v1.angle(v2) == pytest.approx(math.pi/2)
