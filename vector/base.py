@@ -48,6 +48,9 @@ class VectorBase:
     def __mul__(self, other):
         return self.__class__(*[getattr(self, d) * other for d in self.dimensions])
 
+    def __rmul__(self, other):
+        return self*other
+
     def __truediv__(self, other):
         return self.__class__(*[getattr(self, d) / other for d in self.dimensions])
 

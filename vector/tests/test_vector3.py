@@ -63,6 +63,7 @@ def test_can_substract_vectors():
 def test_can_multiply_by_number():
     v = Vector3(1, 2, 3)
     assert v * 3 == Vector3(1 * 3, 2 * 3, 3 * 3)
+    assert 3 * v == Vector3(1 * 3, 2 * 3, 3 * 3)
 
 
 def test_can_divide_by_number():
