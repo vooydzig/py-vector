@@ -11,6 +11,17 @@ def test_can_create():
     assert v.y == 0
     assert v.z == 0
 
+def test_can_create_from_collections():
+    v = Vector3([0, 0, 0])
+    assert v.x == 0
+    assert v.y == 0
+    assert v.z == 0
+
+    v = Vector3((0, 0, 0))
+    assert v.x == 0
+    assert v.y == 0
+    assert v.z == 0
+
 
 def test_can_update_coordinates():
     v = Vector3(0, 0, 0)

@@ -1,23 +1,26 @@
 import math
 
 
-def clamp_value(a, min, max):
-    if a < min:
+def clamp(value, min, max):
+    if value < min:
         return min
-    if a > max:
+    if value > max:
         return max
-    return a
+    return value
 
 
 class VectorBase:
     dimensions = []
 
     def __init__(self, *args):
+        values = args
         if not self.dimensions:
             raise ValueError('Dimensions must be specified')
-        if len(args) != len(self.dimensions):
+        if len(args) == 1 and isinstance(args[0], (tuple, list)):
+            values = args[0]
+        elif len(args) != len(self.dimensions):
             raise ValueError(f'Invalid arguments count. Expected: ({len(self.dimensions)}), received: {len(args)}')
-        for d, v in zip(self.dimensions, args):
+        for d, v in zip(self.dimensions, values):
             setattr(self, d, v)
 
     def __repr__(self):
@@ -78,7 +81,7 @@ class VectorBase:
     @classmethod
     def clamp(cls, v, v_min, v_max):
         args = [
-            clamp_value(getattr(v, d), getattr(v_min, d), getattr(v_max, d))
+            clamp(getattr(v, d), getattr(v_min, d), getattr(v_max, d))
             for d in v.dimensions
         ]
         return cls(*args)
@@ -138,7 +141,7 @@ class VectorBase:
 
     def angle(self, other):
         dot = self.dot(self, other) / (self.length() * other.length())
-        dot = clamp_value(dot, -1, 1)
+        dot = clamp(dot, -1, 1)
         return float(math.acos(dot))
 
     def length_squared(self):
