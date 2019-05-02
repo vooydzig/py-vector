@@ -24,8 +24,8 @@ class VectorBase:
             setattr(self, d, v)
 
     def __repr__(self):
-        dimensions = " ".join(f"{d}={getattr(self, d)} " for d in self.dimensions)
-        return f'{self.__class__.__name__}({dimensions})'
+        dimensions_repr = " ".join(f"{d}={getattr(self, d)} " for d in self.dimensions)
+        return f'{self.__class__.__name__}({dimensions_repr})'
 
     @classmethod
     def zero(cls):
@@ -36,26 +36,26 @@ class VectorBase:
         return cls(*([1] * len(cls.dimensions)))
 
     def __neg__(self):
-        return self.__class__(*[-getattr(self, d) for d in self.dimensions])
+        return self.__class__([-getattr(self, d) for d in self.dimensions])
 
     def __add__(self, other):
         if self.dimensions != other.dimensions:
             raise ValueError
-        return self.__class__(*[getattr(self, d) + getattr(other, d) for d in self.dimensions])
+        return self.__class__([getattr(self, d) + getattr(other, d) for d in self.dimensions])
 
     def __sub__(self, other):
         if self.dimensions != other.dimensions:
             raise ValueError
-        return self.__class__(*[getattr(self, d) - getattr(other, d) for d in self.dimensions])
+        return self.__class__([getattr(self, d) - getattr(other, d) for d in self.dimensions])
 
-    def __mul__(self, other):
-        return self.__class__(*[getattr(self, d) * other for d in self.dimensions])
+    def __mul__(self, scalar):
+        return self.__class__([getattr(self, d) * scalar for d in self.dimensions])
 
-    def __rmul__(self, other):
-        return self * other
+    def __rmul__(self, scalar):
+        return self * scalar
 
-    def __truediv__(self, other):
-        return self.__class__(*[getattr(self, d) / other for d in self.dimensions])
+    def __truediv__(self, scalar):
+        return self.__class__([getattr(self, d) / scalar for d in self.dimensions])
 
     def __eq__(self, other):
         if not isinstance(self, other.__class__):
@@ -69,65 +69,63 @@ class VectorBase:
         raise NotImplementedError
 
     @staticmethod
-    def catmull_rom(p0, p1, p2, p3, t):
-        if t < 0 or t > 1:
+    def catmull_rom(p0, p1, p2, p3, amount):
+        if amount < 0 or amount > 1:
             raise ValueError
         a = p1 * 2
         b = p2 - p0
         c = p0 * 2 - p1 * 5 + p2 * 4 - p3
         d = -p0 + p1 * 3 - p2 * 3 + p3
-        return (a + (b * t) + (c * t ** 2) + (d * t ** 3)) / 2
+        return (a + (b * amount) + (c * amount ** 2) + (d * amount ** 3)) / 2
 
     @classmethod
-    def clamp(cls, v, v_min, v_max):
+    def clamp(cls, vector, min, max):
         args = [
-            clamp(getattr(v, d), getattr(v_min, d), getattr(v_max, d))
-            for d in v.dimensions
+            clamp(getattr(vector, d), getattr(min, d), getattr(max, d))
+            for d in vector.dimensions
         ]
         return cls(*args)
 
     @staticmethod
-    def distance(p1, p2):
-        return (p1 - p2).length()
+    def distance(point1, point2):
+        return (point1 - point2).length()
 
     @staticmethod
-    def distance_squared(p1, p2):
-        return (p1 - p2).length_squared()
+    def distance_squared(point1, point2):
+        return (point1 - point2).length_squared()
 
     @staticmethod
-    def dot(v1, v2):
-        return sum(getattr(v1, d) * getattr(v2, d) for d in v1.dimensions)
+    def dot(vector1, vector2):
+        return sum(getattr(vector1, d) * getattr(vector2, d) for d in vector1.dimensions)
 
     @staticmethod
-    def hermite(p1, m1, p2, m2, t):
-        if t < 0 or t > 1:
+    def hermite(point1, tangent1, point2, tangent2, amount):
+        if amount < 0 or amount > 1:
             raise ValueError
-        a = 2 * t ** 3 - 3 * t ** 2 + 1
-        b = t ** 3 - 2 * t ** 2 + t
-        c = -2 * t ** 3 + 3 * t ** 2
-        d = t ** 3 - t ** 2
-        return p1 * a + m1 * b + p2 * c + m2 * d
+        a = 2 * amount ** 3 - 3 * amount ** 2 + 1
+        b = amount ** 3 - 2 * amount ** 2 + amount
+        c = -2 * amount ** 3 + 3 * amount ** 2
+        d = amount ** 3 - amount ** 2
+        return point1 * a + tangent1 * b + point2 * c + tangent2 * d
 
     @staticmethod
-    def lerp(v1, v2, t):
-        if t < 0 or t > 1:
+    def lerp(vector1, vector2, amount):
+        if amount < 0 or amount > 1:
             raise ValueError
-        return v1 + (v2 - v1) * t
+        return vector1 + (vector2 - vector1) * amount
 
     @classmethod
-    def max(cls, v1, v2):
-        args = [max(getattr(v1, d), getattr(v2, d)) for d in v1.dimensions]
-        return cls(*args)
+    def max(cls, vector1, vector2):
+        return cls([max(getattr(vector1, d), getattr(vector2, d)) for d in vector1.dimensions])
 
     @classmethod
-    def min(cls, v1, v2):
-        args = [min(getattr(v1, d), getattr(v2, d)) for d in v1.dimensions]
-        return cls(*args)
+    def min(cls, vector1, vector2):
+        return cls([min(getattr(vector1, d), getattr(vector2, d)) for d in vector1.dimensions])
 
     @staticmethod
-    def normalize(v):
+    def normalize(vector):
         """return new normalized vector"""
-        return v / v.length()
+        return vector / vector.length()
 
     @staticmethod
     def reflect(vector, normal):
@@ -136,7 +134,7 @@ class VectorBase:
         return vector - n * 2 * dot
 
     @staticmethod
-    def smooth_step(v1, v2, amount):
+    def smooth_step(vector1, vector2, amount):
         raise NotImplementedError
 
     def angle(self, other):
@@ -151,6 +149,6 @@ class VectorBase:
         return math.sqrt(self.length_squared())
 
     def normalized(self):
-        la = self.length()
+        l = self.length()
         for d in self.dimensions:
-            setattr(self, d, getattr(self, d) / la)
+            setattr(self, d, getattr(self, d) / l)

@@ -11,6 +11,7 @@ def test_can_create():
     assert v.y == 0
     assert v.z == 0
 
+
 def test_can_create_from_collections():
     v = Vector3([0, 0, 0])
     assert v.x == 0
@@ -216,8 +217,9 @@ def test_can_normalize_in_place():
     v.normalized()
     assert v.length() == pytest.approx(1)
 
+
 def test_can_get_angle_between_two_vectors():
     v1 = Vector3.unit_x()
     v2 = Vector3.unit_y()
     assert v1.angle(v1) == 0
-    assert v1.angle(v2) == pytest.approx(math.pi/2)
+    assert v1.angle(v2) == pytest.approx(math.pi / 2)

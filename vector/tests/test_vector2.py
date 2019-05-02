@@ -1,6 +1,7 @@
 import math
 
 import pytest
+
 from vector.vector2 import Vector2
 
 
@@ -8,6 +9,7 @@ def test_can_create():
     v = Vector2(0, 0)
     assert v.x == 0
     assert v.y == 0
+
 
 def test_can_create_from_collections():
     v = Vector2([0, 0])
@@ -17,7 +19,6 @@ def test_can_create_from_collections():
     v = Vector2((0, 0))
     assert v.x == 0
     assert v.y == 0
-
 
 
 def test_can_update_coordinates():
